@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>ТЫ ОБРЕЧЁН</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 20% 30%, #1a0c0a 0%, #0a0302 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial Black', 'Impact', 'Franklin Gothic Heavy', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Кровавый фон — абстрактные потёки и брызги */
+    .blood-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.85;
+      mix-blend-mode: multiply;
+    }
+
+    .blood-drip {
+      position: absolute;
+      background: linear-gradient(180deg, #8b0000 0%, #4a0000 70%, #1a0000 100%);
+      filter: blur(2px);
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.7), inset 0 -5px 8px rgba(255, 50, 50, 0.5);
+    }
+
+    .blood-splatter {
+      position: absolute;
+      background: radial-gradient(circle, #a00000 0%, #5c0000 70%, transparent 100%);
+      border-radius: 50%;
+      filter: blur(3px);
+      opacity: 0.7;
+    }
+
+    .blood-smear {
+      position: absolute;
+      background: #7a0000;
+      opacity: 0.5;
+      filter: blur(6px);
+      transform: rotate(15deg);
+      border-radius: 40% 60% 30% 70% / 50% 40% 60% 50%;
+      box-shadow: 0 0 30px #ff2222 inset;
+    }
+
+    /* Основной контейнер с текстом */
+    .curse-container {
+      position: relative;
+      z-index: 10;
+      max-width: 1000px;
+      width: 90%;
+      margin: 20px;
+      text-align: center;
+      filter: drop-shadow(0 0 30px #300000) drop-shadow(0 0 15px #a00);
+      animation: pulseShadow 2.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseShadow {
+      0% { filter: drop-shadow(0 0 15px #5a0000) drop-shadow(0 0 5px #8b0000); }
+      100% { filter: drop-shadow(0 0 45px #c00000) drop-shadow(0 0 25px #ff4444); }
+    }
+
+    /* Основной заголовок — готический кровавый стиль */
+    .blood-text {
+      font-size: clamp(3rem, 15vw, 7.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 6px;
+      color: #e60000;
+      text-shadow: 
+        0 0 10px #ff0000,
+        0 0 20px #b30000,
+        2px 4px 10px #000000,
+        5px 8px 0 #1f0000,
+        8px 12px 20px rgba(0,0,0,0.9);
+      transform: perspective(500px) rotateX(3deg);
+      margin-bottom: 5px;
+      word-break: break-word;
+      font-family: 'Impact', 'Arial Black', 'Franklin Gothic Heavy', 'Anton', sans-serif;
+      -webkit-text-stroke: 2px #1a0000;
+    }
+
+    /* Вторая строка — ещё более жуткая */
+    .doomed-line {
+      font-size: clamp(2.5rem, 12vw, 6rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 8px;
+      color: #aa0000;
+      text-shadow: 
+        0 0 15px #ff5555,
+        0 0 35px #8b0000,
+        3px 6px 5px #000,
+        6px 10px 0 #1f0000,
+        -2px -2px 0 #4d0000;
+      transform: perspective(600px) rotateX(2deg) rotateY(-1deg);
+      word-break: break-word;
+      font-family: 'Impact', 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+      -webkit-text-stroke: 2.5px #2b0000;
+      margin-top: -10px;
+    }
+
+    /* Эффект стекающей крови прямо на буквах */
+    .dripping-blood {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dripping-blood::after {
+      content: '';
+      position: absolute;
+      bottom: -18px;
+      left: 10%;
+      width: 90%;
+      height: 30px;
+      background: linear-gradient(to bottom, #c00000, #5a0000, transparent);
+      border-radius: 0 0 30px 30px;
+      filter: blur(3px);
+      opacity: 0.8;
+      box-shadow: 0 8px 12px #1a0000;
+      z-index: -1;
+    }
+
+    /* Дополнительные кровавые капли на текст */
+    .blood-drop {
+      position: absolute;
+      background: #a00000;
+      width: 14px;
+      height: 20px;
+      border-radius: 50% 50% 40% 40%;
+      filter: blur(1.8px);
+      box-shadow: 0 5px 8px black, inset -2px -3px 5px #ff7777;
+      opacity: 0.9;
+      z-index: 20;
+    }
+
+    /* Подпись / усиление */
+    .sub-message {
+      margin-top: 35px;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #b33;
+      text-shadow: 0 0 15px #d00, 2px 2px 5px black;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      border-top: 3px solid #6b0000;
+      display: inline-block;
+      padding-top: 25px;
+      padding-left: 25px;
+      padding-right: 25px;
+      backdrop-filter: blur(2px);
+      font-family: monospace;
+      word-spacing: 10px;
+    }
+
+    /* Декоративные трещины и кляксы */
+    .crack {
+      position: fixed;
+      background: #2f0000;
+      filter: blur(5px);
+      opacity: 0.5;
+      z-index: 5;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 600px) {
+      .blood-text {
+        letter-spacing: 2px;
+        -webkit-text-stroke: 1.5px #1a0000;
+      }
+      .doomed-line {
+        letter-spacing: 3px;
+      }
+      .sub-message {
+        font-size: 1.1rem;
+        letter-spacing: 4px;
+      }
+    }
+
+    /* Кровь из углов */
+    .corner-blood {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle at 0% 100%, #8b0000 0%, #2b0000 50%, transparent 80%);
+      filter: blur(15px);
+      opacity: 0.6;
+      z-index: 4;
+    }
+    .corner-blood-right {
+      right: 0;
+      left: auto;
+      background: radial-gradient(circle at 100% 100%, #8b0000 0%, #2b0000 50%, transparent 80%);
+    }
+    .top-blood {
+      top: 0;
+      bottom: auto;
+      background: radial-gradient(circle at 0% 0%, #a00 0%, #300 50%, transparent 80%);
+    }
+    .top-blood-right {
+      top: 0;
+      bottom: auto;
+      right: 0;
+      left: auto;
+      background: radial-gradient(circle at 100% 0%, #a00 0%, #300 50%, transparent 80%);
+    }
+
+    /* Мигание для драматизма */
+    @keyframes flicker {
+      0%, 100% { opacity: 1; text-shadow: 0 0 10px #ff0000, 0 0 20px #b30000, 2px 4px 10px #000, 5px 8px 0 #1f0000; }
+      15% { opacity: 0.85; text-shadow: 0 0 15px #ff5555, 0 0 25px #990000, 3px 5px 8px black; }
+      30% { opacity: 0.95; }
+      50% { opacity: 1; text-shadow: 0 0 18px #ff2222, 0 0 30px #8b0000, 6px 9px 0 #200; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Обильный кровавый слой: потёки, брызги, разводы -->
+  <div class="blood-overlay">
+    <!-- крупные потёки -->
+    <div class="blood-drip" style="top: 0; left: 5%; width: 35px; height: 140px; border-radius: 0 0 50px 50px; filter: blur(3px); opacity: 0.9;"></div>
+    <div class="blood-drip" style="top: 0; left: 18%; width: 25px; height: 200px; border-radius: 0 0 30px 30px; filter: blur(4px); background: #6b0000;"></div>
+    <div class="blood-drip" style="top: 0; left: 75%; width: 40px; height: 170px; border-radius: 0 0 60px 40px; filter: blur(3.5px);"></div>
+    <div class="blood-drip" style="top: 0; left: 88%; width: 20px; height: 260px; border-radius: 0 0 40px 40px; filter: blur(5px); background: #5f0000;"></div>
+    
+    <!-- горизонтальные мазки -->
+    <div class="blood-smear" style="top: 20%; left: -20px; width: 350px; height: 90px; transform: rotate(-10deg); opacity: 0.5;"></div>
+    <div class="blood-smear" style="bottom: 10%; right: -30px; width: 400px; height: 120px; transform: rotate(8deg); opacity: 0.4;"></div>
+    
+    <!-- брызги / splatter -->
+    <div class="blood-splatter" style="top: 15%; left: 40%; width: 160px; height: 160px;"></div>
+    <div class="blood-splatter" style="bottom: 20%; left: 70%; width: 250px; height: 250px; opacity: 0.5;"></div>
+    <div class="blood-splatter" style="top: 60%; left: 5%; width: 200px; height: 200px; filter: blur(8px); background: #4a0000;"></div>
+    <div class="blood-splatter" style="top: 30%; right: 10%; width: 120px; height: 120px;"></div>
+    
+    <!-- дополнительные потёки снизу вверх (как кровь стекает) -->
+    <div class="blood-drip" style="bottom: 0; left: 10%; width: 30px; height: 150px; border-radius: 50px 50px 0 0; transform: rotate(180deg); filter: blur(2.5px); background: #7a0000;"></div>
+    <div class="blood-drip" style="bottom: 0; right: 15%; width: 45px; height: 190px; border-radius: 60px 60px 0 0; transform: rotate(180deg); filter: blur(4px); background: #600;"></div>
+  </div>
+
+  <!-- Угловые тёмно-кровавые пятна -->
+  <div class="corner-blood"></div>
+  <div class="corner-blood corner-blood-right"></div>
+  <div class="corner-blood top-blood"></div>
+  <div class="corner-blood top-blood-right"></div>
+
+  <!-- Трещины / затемнения -->
+  <div class="crack" style="top: 0; left: 0; width: 100%; height: 8px;"></div>
+  <div class="crack" style="bottom: 0; left: 0; width: 100%; height: 12px; background: #1a0000;"></div>
+
+  <!-- ГЛАВНЫЙ КОНТЕНТ: СТРАШНОЕ ПОСЛАНИЕ -->
+  <div class="curse-container">
+    <div class="dripping-blood">
+      <h1 class="blood-text">ТЕБЯ НЕ СПАСТИ.</h1>
+    </div>
+    <div style="position: relative;">
+      <h2 class="doomed-line">ТЫ ОБРЕЧЁН!!!!!!!!</h2>
+      <!-- рукотворные капли крови на буквах -->
+      <span class="blood-drop" style="top: -10px; left: 5%; width: 22px; height: 28px; filter: blur(2.5px); transform: rotate(5deg);"></span>
+      <span class="blood-drop" style="top: 20px; right: 12%; width: 18px; height: 25px; filter: blur(3px); background: #8b0000;"></span>
+      <span class="blood-drop" style="bottom: -15px; left: 35%; width: 30px; height: 35px; filter: blur(4px); opacity: 0.8;"></span>
+      <span class="blood-drop" style="top: -5px; right: 28%; width: 15px; height: 22px; background: #b30000;"></span>
+    </div>
+    <div class="sub-message">⚰️ НЕТ НАДЕЖДЫ ⚰️</div>
+  </div>
+
+  <!-- Дополнительная анимация дрожи для усиления эффекта -->
+  <script>
+    (function() {
+      // Добавляем небольшую пульсацию текста и дополнительные капли, создающие ощущение ужаса
+      const container = document.querySelector('.curse-container');
+      const doomedLine = document.querySelector('.doomed-line');
+      
+      // случайное мерцание подписи
+      setInterval(() => {
+        if (Math.random() > 0.6) {
+          doomedLine.style.animation = 'flicker 0.3s steps(2) 2';
+          setTimeout(() => doomedLine.style.animation = '', 600);
+        }
+      }, 1500);
+
+      // Динамические брызги при движении мыши (как будто кровь реагирует)
+      document.addEventListener('mousemove', (e) => {
+        if (Math.random() > 0.75) {
+          const splatter = document.createElement('div');
+          splatter.className = 'blood-splatter';
+          const size = Math.floor(Math.random() * 60 + 30);
+          splatter.style.width = size + 'px';
+          splatter.style.height = size + 'px';
+          splatter.style.left = (e.clientX - size/2) + 'px';
+          splatter.style.top = (e.clientY - size/2) + 'px';
+          splatter.style.position = 'fixed';
+          splatter.style.zIndex = '15';
+          splatter.style.pointerEvents = 'none';
+          splatter.style.opacity = '0.6';
+          splatter.style.background = 'radial-gradient(circle, #a00 0%, #4a0000 70%, transparent 100%)';
+          splatter.style.filter = 'blur(5px)';
+          splatter.style.transition = 'opacity 2s, transform 2s';
+          document.body.appendChild(splatter);
+          
+          setTimeout(() => {
+            splatter.style.opacity = '0';
+            splatter.style.transform = 'scale(1.5)';
+          }, 50);
+          
+          setTimeout(() => {
+            if (splatter.parentNode) splatter.remove();
+          }, 2000);
+        }
+      });
+
+      // дополнительно: кровавые капли, появляющиеся на буквах время от времени
+      function spawnBloodDropOnText() {
+        const textElem = document.querySelector('.doomed-line');
+        const rect = textElem.getBoundingClientRect();
+        if (!rect) return;
+        
+        for (let i = 0; i < 3; i++) {
+          const drop = document.createElement('div');
+          drop.className = 'blood-drop';
+          const sizeW = Math.floor(Math.random() * 18 + 8);
+          const sizeH = Math.floor(Math.random() * 25 + 12);
+          drop.style.width = sizeW + 'px';
+          drop.style.height = sizeH + 'px';
+          drop.style.left = (rect.left + Math.random() * rect.width) + 'px';
+          drop.style.top = (rect.top + Math.random() * rect.height * 0.7) + 'px';
+          drop.style.position = 'fixed';
+          drop.style.zIndex = '25';
+          drop.style.pointerEvents = 'none';
+          drop.style.opacity = '0.9';
+          drop.style.filter = 'blur(2.5px)';
+          drop.style.background = '#a00000';
+          drop.style.boxShadow = '0 4px 8px black, inset -1px -2px 6px #ff8888';
+          drop.style.transform = `rotate(${Math.random() * 20 - 10}deg)`;
+          document.body.appendChild(drop);
+          
+          setTimeout(() => {
+            drop.style.transition = 'opacity 1.5s, transform 1.5s';
+            drop.style.opacity = '0';
+            drop.style.transform += ' translateY(20px)';
+          }, 200);
+          
+          setTimeout(() => {
+            if (drop.parentNode) drop.remove();
+          }, 2000);
+        }
+      }
+      
+      setInterval(spawnBloodDropOnText, 3200);
+      
+      // Запускаем сразу при загрузке
+      window.addEventListener('load', () => {
+        spawnBloodDropOnText();
+        // добавим эффект "дрожания" строки при наведении
+        const title = document.querySelector('.blood-text');
+        title.addEventListener('mouseenter', () => {
+          title.style.transition = 'transform 0.1s';
+          let shakes = 0;
+          const interval = setInterval(() => {
+            if (shakes++ > 6) {
+              title.style.transform = 'perspective(500px) rotateX(3deg)';
+              clearInterval(interval);
+              return;
+            }
+            title.style.transform = `perspective(500px) rotateX(${3 + (Math.random()*4-2)}deg) rotateY(${Math.random()*3-1.5}deg)`;
+          }, 60);
+        });
+        title.addEventListener('mouseleave', () => {
+          title.style.transform = 'perspective(500px) rotateX(3deg)';
+        });
+      });
+      
+      // Добавим ещё статичные капли на страницу для постоянного присутствия
+      for (let i=0; i<12; i++) {
+        const extraDrop = document.createElement('div');
+        extraDrop.className = 'blood-drop';
+        extraDrop.style.position = 'fixed';
+        extraDrop.style.left = Math.random() * 100 + '%';
+        extraDrop.style.top = Math.random() * 100 + '%';
+        extraDrop.style.width = (Math.random() * 25 + 10) + 'px';
+        extraDrop.style.height = (Math.random() * 35 + 15) + 'px';
+        extraDrop.style.opacity = 0.4 + Math.random() * 0.5;
+        extraDrop.style.filter = `blur(${2+Math.random()*6}px)`;
+        extraDrop.style.transform = `rotate(${Math.random()*40-20}deg)`;
+        extraDrop.style.zIndex = '18';
+        extraDrop.style.pointerEvents = 'none';
+        extraDrop.style.background = '#7a0000';
+        document.body.appendChild(extraDrop);
+      }
+    })();
+  </script>
+  <!-- гарантируем, что текст «Ты обречён!!!!!!!!» виден с восклицательными знаками -->
+  <!-- финальный штрих: тёмная виньетка -->
+  <div style="position: fixed; top:0; left:0; width:100%; height:100%; box-shadow: inset 0 0 180px #0a0000, inset 0 0 60px #1f0000; pointer-events: none; z-index: 50;"></div>
+</body>
+</html>
